@@ -1,51 +1,58 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { TbChevronUp} from 'react-icons/tb';
+import { TbChevronUp } from "react-icons/tb";
 import "./style.css";
-import background from '../images/background.jpg';
+import background from "../images/background.jpg";
 
 export function Persons() {
-
   const [newP, setNewP] = useState([]);
-  const [search , setSearch ] = useState('');
+  const [search, setSearch] = useState("");
+  
+  console.log(newP)
 
   const requestData = async () => {
-        const response = await fetch("https://rickandmortyapi.com/api/character");
-        const data = await response.json();
-        setNewP(data.results);
+    const response = await fetch("https://rickandmortyapi.com/api/character");
+    const data = await response.json();
+    setNewP(data.results);
   };
 
   useEffect(() => {
     requestData();
-    console.log('Component renderizing');
+    console.log("Component renderizing");
   }, [search]);
 
-
-  function returnToTop(){
-    const top = document.querySelector('.toTop');
-        window.scrollTo({top: 0 , left: 0 , behavior: 'smooth'})
+  function returnToTop() {
+    const top = document.querySelector(".toTop");
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }
 
- function handleSearchPerson(e){
-    setSearch(e);
-    console.log(search);
- }
 
   return (
     <div className="container">
-             <p onClick={() => returnToTop()} className="toTop"> <TbChevronUp/>  </p>
+      <p onClick={() => returnToTop()} className="toTop">
+        {" "}
+        <TbChevronUp />{" "}
+      </p>
       <div className="searchAndTitle">
         <h1> Personagens </h1>
-        <input className="search" type="search" placeholder="Buscar personagem" value={search} onChange={(e) => handleSearchPerson(e.target.value)}/>
+        <input
+          className="search"
+          type="search"
+          placeholder="Buscar personagem"
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
       <div className="containerPerson">
-
         {newP &&
-          newP.map((p, index) => {
-            return (
-              <div className="Persons" key={index} style={{backgroundImage: `url(${background})`}} >
-                <div className="cardPersons" >
+          newP.filter((p , index ) => p.name.toLowerCase().includes(search.toLowerCase())).map((p, index) =>
+          (
+              <div
+                className="Persons"
+                key={index}
+                style={{ backgroundImage: `url(${background})` }}
+              >
+                <div className="cardPersons">
                   <img
                     className="imagePerson"
                     src={p.image}
@@ -58,8 +65,8 @@ export function Persons() {
                   </div>
                 </div>
               </div>
-            );
-          })}
+            )
+          )}
       </div>
     </div>
   );
